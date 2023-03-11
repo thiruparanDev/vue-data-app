@@ -1,5 +1,11 @@
 <template>
-  <input  v-model="searchText" @input="print(e)">
+  <div><input  v-model="searchText" placeholder="Enter text">
+  </div>
+  <div>
+    <input v-model="monthRef" placeholder="mm-yyyy ">
+  </div>
+  <button @click="onSearch">Search</button>
+  
   <!-- {{searchText}} -->
     <div v-for="beer in beersRef" :key="beer.id" class="hello">
     <li>
@@ -17,26 +23,57 @@
 </template>
 
 <script lang="ts">
-import { defineComponent,ref } from "vue";
+import { defineComponent,ref, onMounted } from "vue";
 import {apiCall} from '@/services/BeerService';
 export default defineComponent({
   name: "HelloWorld",
   props: {
     msg: String
   },
+  components:{
+  },
   setup (){
     const searchText=ref("");
     const beersRef:any= ref([]);
-    apiCall().then(response=>beersRef.value=response.data);
-    console.log(apiCall());
-    const print=(e: any)=>{
-      console.log('gu')
-      console.log(searchText.value);
+    const monthRef:any= ref("");
+    onMounted(()=>{
+      apiCall().then(response=>beersRef.value=response);
+      console.log(beersRef.value);
+    });
+
+    // const print=(e: any)=>{
+    //   // console.log('gu')
+    //   console.log(searchText.value);
+    // };
+
+    const onSearch = ()=>{
+      console.log(monthRef.value);
+      let text ="";
+      let period ="";
+      if (searchText.value){
+        text = searchText.value.replace(/ /g,"_");
+        text='beer_name='+text;
+        // beforeApiCall(`beer_name=${replacedText}`);
+      }
+      if (monthRef.value){
+        period=monthRef.value;
+        period='brewed_before='+period;
+      }
+      apiCall(text,period).then(response=>beersRef.value=response);
+      console.log(beersRef.value);
+      // console.log(searchText.value);
     };
+
+    // const beforeApiCall = (text?: string, period: any)=>{
+    //   apiCall(text, period).then(response=>beersRef.value=response);
+    // };
+
     return{
       beersRef,
+      monthRef,
       searchText,
-      print
+      print,
+      onSearch
     };
   }
 });
