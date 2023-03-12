@@ -5,10 +5,16 @@
         <h3>{{selectedBeer?.name}}</h3>
         <div class="list">
         <div>
-          <img :src="selectedBeer?.image_url" alt="not found" height="200">
+          <img :src="selectedBeer?.image_url" alt="Image not found" height="200">
         </div>
         <div class="details" >
-        <div v-for="detail in details" :key="detail" class="detail">
+          <!-- <div>
+            {{selectedBeer?.description}} <br>
+            {{selectedBeer?.first_brewed}} <br>
+            {{selectedBeer?.ingredients.yeast}} <br>
+            {{selectedBeer?.abv}}
+          </div> -->
+        <div v-for="detail in detailsRef" :key="detail" class="detail">
            {{detail.name}} {{detail.value}}
         </div>
     </div>
@@ -18,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent,ref, onMounted } from "vue";
+import { defineComponent,ref, onMounted ,computed} from "vue";
 export default defineComponent({
     props:{
         closePopUp:Function,
@@ -27,25 +33,28 @@ export default defineComponent({
     ,
     setup(props){
     // const details=[props.selectedBeer?.description,props.selectedBeer?.first_brewed,props.selectedBeer?.yeast,props.selectedBeer?.abv];
-    const details=
-    [{name:'',value:props.selectedBeer?.description},
+//     const detailsRef= ref(
+//     [{name:'',value:props.selectedBeer?.description},
+//     {name:'First brewed: ',value:props.selectedBeer?.first_brewed},
+//     {name:'Yeast: ',value:props.selectedBeer?.ingredients?.yeast},
+//     {name:'Alcohol percentatage: ',value:props.selectedBeer?.abv}
+// ]);
+
+      const detailsRef = computed(()=>{
+      return([{name:'',value:props.selectedBeer?.description},
     {name:'First brewed: ',value:props.selectedBeer?.first_brewed},
     {name:'Yeast: ',value:props.selectedBeer?.ingredients?.yeast},
-    {name:'Alcohol percentatage: ',value:props.selectedBeer?.abv}
-];
-
-    const closePopUp1=()=>{
-        
-        console.log("hi");
-    };
-    const print =(detail: any)=>{
-        console.log(props?.selectedBeer?.detail);
-    };
+    {name:'Alcohol percentage: ',value:props.selectedBeer?.abv}
+]);}
+      );
+    // const print =(detail: any)=>{
+    //     console.log(props?.selectedBeer?.detail);
+    // };
 
     return{
-    closePopUp1,
-    details,
-    print
+    detailsRef
+    // ,
+    // print
     };
     }
 });
@@ -54,13 +63,14 @@ export default defineComponent({
 <style 
 lang="scss" scoped>
 .popUp{
+  position: fixed;
     .list {
     display: flex;
     flex-direction: row;
 
     .details {
       margin-top: 10px;
-      position: relative;
+      
       display: flex;
       flex-direction: column;
       /* // top:50px;
@@ -76,13 +86,15 @@ lang="scss" scoped>
   margin-right: 25%;
   height: 400px;
   width:50%;
+  top: 25%;
+  bottom: 25%;
   /* position: absolute; */
     /* top: 100px; */
     background-color: lightblue;
     
     button{
         position: relative;
-        left: 47%;
+        left: 48.5%;
     }
 }
 </style>

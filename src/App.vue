@@ -8,6 +8,7 @@
 
 <style>
 #app {
+  /* background-color: orange; */
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -15,9 +16,10 @@
   color: #2c3e50;
 }
 
-/* #nav {
-  padding: 30px;
-} */
+#nav {
+  /* padding: 30px; */
+  /* background-color: orange; */
+}
 
 #nav a {
   font-weight: bold;
