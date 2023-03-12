@@ -63,17 +63,17 @@ export default defineComponent({
     PopUp
   },
   setup() {
-    const yearRef: any = ref();
-    const monthRef: any = ref();
-    const searchText: any = ref("");
+    const yearRef:Ref<number|undefined> = ref();
+    const monthRef:Ref<number|undefined>= ref();
+    const searchText: Ref<string>= ref("");
     const beersRef: any = ref([]);
-    const yeastRef: any = ref("");
-    const abvGtRef: any = ref();
-    const abvLtRef: any = ref();
-    const pageNumberRef: any = ref(1);
-    const showPopupRef: any = ref(false);
-    const selectedBeerRef: any = ref("");
-    const clickCount: any = ref(0);
+    const yeastRef: Ref<string>= ref("");
+    const abvGtRef:Ref<number|undefined>= ref();
+    const abvLtRef:Ref<number|undefined>= ref();
+    const pageNumberRef:Ref<number> = ref(1);
+    const showPopupRef:Ref<boolean> = ref(false);
+    const selectedBeerRef: Ref<string> = ref("");
+    const clickCount: Ref<number> = ref(0);
     onMounted(async () => {
       let savedItem = localStorage.getItem('savedItem');
       if (savedItem !== null) {
@@ -126,17 +126,18 @@ export default defineComponent({
       await getData();
     };
     interface Saved {
-      searchText: any;
+      searchText: string;
       // monthRef: any;
-      yeastRef: any;
-      abvGtRef: any;
-      abvLtRef: any;
-      pageNumberRef: any;
-      monthRef:any;
-      yearRef: any;
+      yeastRef: string;
+      abvGtRef: number|undefined;
+      abvLtRef: number|undefined;
+      pageNumberRef: number;
+      monthRef:number|undefined;
+      yearRef: number|undefined;
       // showPopupRef: any;
       // selectedBeerRef: any;
-      clickCount: any
+      clickCount: number
+      
     }
     const saveSettings = () => {
       const saved: Saved = { searchText: searchText.value, monthRef: monthRef.value, yearRef:yearRef.value, yeastRef: yeastRef.value, abvGtRef: abvGtRef.value, abvLtRef: abvLtRef.value, pageNumberRef: pageNumberRef.value, clickCount: clickCount.value };
@@ -148,6 +149,7 @@ export default defineComponent({
       let yeast = "";
       let abvGt = "";
       let abvLt = "";
+      let fetch=true;
       if (searchText.value) {
         text = searchText.value.replace(/ /g, "_");
         text = 'beer_name=' + text;
@@ -159,13 +161,16 @@ export default defineComponent({
       // }
       if(monthRef.value&&!yearRef.value){
         alert("enter year");
+        fetch=false;
       }
       if(!monthRef.value&&yearRef.value){
         alert("enter month");
+        fetch=false;
       }
       if (monthRef.value && yearRef.value) {
-        if(isNaN(monthRef.value)||isNaN(yearRef.value)||monthRef.value.length>2||yearRef.value<1900||yearRef.value>2023||monthRef.value<1||monthRef.value>12){
+        if(isNaN(monthRef.value)||isNaN(yearRef.value)||yearRef.value<1900||yearRef.value>2023||monthRef.value<1||monthRef.value>12||monthRef.value.toString().length>2){
           alert("Enter valid year and month");
+          fetch=false;
         }
         else {
           period = `${monthRef.value}-${yearRef.value}`;       
@@ -179,6 +184,7 @@ export default defineComponent({
       if (abvGtRef.value) {
         if (isNaN(abvGtRef.value)) {
           alert("please enter a number for Alcohol percentage");
+          fetch=false;
         }
         else {
           abvGt = 'abv_gt=' + abvGtRef.value;
@@ -187,15 +193,17 @@ export default defineComponent({
       if (abvLtRef.value) {
         if (isNaN(abvLtRef.value)) {
           alert("please enter a number for Alcohol percentage");
+          fetch=false;
         }
         else {
           abvLt = 'abv_lt=' + abvLtRef.value;
         }
       }
-
-      await apiCall(text, period, yeast, abvGt, abvLt, pageNumberRef.value).then(response => beersRef.value = response);
+      if (fetch){
+        await apiCall(text, period, yeast, abvGt, abvLt, pageNumberRef.value).then(response => beersRef.value = response);
+        saveSettings();
+      }
       // console.log(searchText.value);
-      saveSettings();
     };
     // const beforeApiCall = (text?: string, period: any)=>{
     //   apiCall(text, period).then(response=>beersRef.value=response);
