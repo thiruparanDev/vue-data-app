@@ -5,8 +5,11 @@
   <div>
     <div><input v-model="searchText" placeholder="Enter beer name">
     </div>
-    <div>
-      <input v-model="monthRef" placeholder="Enter date (mm-yyyy) brewed before ">
+    <div class="date">
+      <!-- <input v-model="monthRef" placeholder="Enter date (mm-yyyy) brewed before "> -->
+      <!-- <p>Enter date (mm-yyyy) brewed before </p> -->
+      <span>Enter brewed date before: </span><input v-model="monthRef" placeholder="mm">-<input v-model="yearRef"
+        placeholder="yyyy">
     </div>
     <div>
       <input v-model="yeastRef" placeholder="yeast name ">
@@ -60,9 +63,10 @@ export default defineComponent({
     PopUp
   },
   setup() {
+    const yearRef: any = ref();
+    const monthRef: any = ref();
     const searchText: any = ref("");
     const beersRef: any = ref([]);
-    const monthRef: any = ref("");
     const yeastRef: any = ref("");
     const abvGtRef: any = ref();
     const abvLtRef: any = ref();
@@ -70,13 +74,14 @@ export default defineComponent({
     const showPopupRef: any = ref(false);
     const selectedBeerRef: any = ref("");
     const clickCount: any = ref(0);
-    onMounted(async() => {
+    onMounted(async () => {
       let savedItem = localStorage.getItem('savedItem');
       if (savedItem !== null) {
         const savedItem1: Saved = JSON.parse(savedItem);
         // console.log(savedItem?.searchText);
         searchText.value = savedItem1?.searchText;
         monthRef.value = savedItem1.monthRef;
+        yearRef.value = savedItem1.yearRef;
         yeastRef.value = savedItem1.yeastRef;
         abvGtRef.value = savedItem1.abvGtRef;
         abvLtRef.value = savedItem1.abvLtRef;
@@ -101,17 +106,17 @@ export default defineComponent({
         await getData();
       }
     };
-    const increasePage = async() => {
-      if (beersRef.value.length===20){
-      pageNumberRef.value++;
-      await getData();
+    const increasePage = async () => {
+      if (beersRef.value.length === 20) {
+        pageNumberRef.value++;
+        await getData();
       }
     };
     const showPopup = (beer: any) => {
       showPopupRef.value = true;
       selectedBeerRef.value = beer;
       clickCount.value++;
-      saveSettings();
+      // saveSettings();
     };
     const closePopUp = () => {
       showPopupRef.value = false;
@@ -122,17 +127,19 @@ export default defineComponent({
     };
     interface Saved {
       searchText: any;
-      monthRef: any;
+      // monthRef: any;
       yeastRef: any;
       abvGtRef: any;
       abvLtRef: any;
       pageNumberRef: any;
+      monthRef:any;
+      yearRef: any;
       // showPopupRef: any;
       // selectedBeerRef: any;
       clickCount: any
     }
     const saveSettings = () => {
-      const saved: Saved = { searchText: searchText.value, monthRef: monthRef.value, yeastRef: yeastRef.value, abvGtRef: abvGtRef.value, abvLtRef: abvLtRef.value, pageNumberRef: pageNumberRef.value, clickCount: clickCount.value };
+      const saved: Saved = { searchText: searchText.value, monthRef: monthRef.value, yearRef:yearRef.value, yeastRef: yeastRef.value, abvGtRef: abvGtRef.value, abvLtRef: abvLtRef.value, pageNumberRef: pageNumberRef.value, clickCount: clickCount.value };
       localStorage.setItem('savedItem', JSON.stringify(saved));
     };
     const getData = async () => {
@@ -146,32 +153,47 @@ export default defineComponent({
         text = 'beer_name=' + text;
         // beforeApiCall(`beer_name=${replacedText}`);
       }
-      if (monthRef.value) {
-        period = monthRef.value;
-        period = 'brewed_before=' + period;
+      // if (monthRef.value) {
+      //   period = monthRef.value;
+      //   period = 'brewed_before=' + period;
+      // }
+      if(monthRef.value&&!yearRef.value){
+        alert("enter year");
+      }
+      if(!monthRef.value&&yearRef.value){
+        alert("enter month");
+      }
+      if (monthRef.value && yearRef.value) {
+        if(isNaN(monthRef.value)||isNaN(yearRef.value)||monthRef.value.length>2||yearRef.value<1900||yearRef.value>2023||monthRef.value<1||monthRef.value>12){
+          alert("Enter valid year and month");
+        }
+        else {
+          period = `${monthRef.value}-${yearRef.value}`;       
+          period = 'brewed_before=' + period;
+        }
       }
       if (yeastRef.value) {
         yeast = yeastRef.value.replace(/ /g, "_");
         yeast = 'yeast=' + yeastRef.value;
       }
       if (abvGtRef.value) {
-        if (isNaN(abvGtRef.value)){
+        if (isNaN(abvGtRef.value)) {
           alert("please enter a number for Alcohol percentage");
         }
-        else{
-        abvGt = 'abv_gt=' + abvGtRef.value;
-      }
+        else {
+          abvGt = 'abv_gt=' + abvGtRef.value;
+        }
       }
       if (abvLtRef.value) {
-        if (isNaN(abvLtRef.value)){
+        if (isNaN(abvLtRef.value)) {
           alert("please enter a number for Alcohol percentage");
         }
-        else{
-        abvLt = 'abv_lt=' + abvLtRef.value;
-      }
+        else {
+          abvLt = 'abv_lt=' + abvLtRef.value;
+        }
       }
 
-      await apiCall(text, period, yeast, abvGt,abvLt, pageNumberRef.value).then(response => beersRef.value = response);
+      await apiCall(text, period, yeast, abvGt, abvLt, pageNumberRef.value).then(response => beersRef.value = response);
       // console.log(searchText.value);
       saveSettings();
     };
@@ -181,7 +203,6 @@ export default defineComponent({
 
     return {
       beersRef,
-      monthRef,
       searchText,
       print,
       getData,
@@ -196,7 +217,9 @@ export default defineComponent({
       onSearch,
       closePopUp,
       selectedBeerRef,
-      clickCount
+      clickCount,
+      yearRef,
+      monthRef
     };
   }
 });
@@ -214,8 +237,15 @@ export default defineComponent({
   top: 0;
   left: 0;
 }
-input{
+
+input {
   width: 300px;
+}
+
+.date {
+  input {
+    width: 50px;
+  }
 }
 
 .hello {
@@ -275,5 +305,4 @@ li {
 
 // }
 
-// }
-</style>
+// }</style>
