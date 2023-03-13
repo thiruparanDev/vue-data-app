@@ -116,7 +116,7 @@ export default defineComponent({
       showPopupRef.value = true;
       selectedBeerRef.value = beer;
       clickCount.value++;
-      // saveSettings();
+      saveSettings();
     };
     const closePopUp = () => {
       showPopupRef.value = false;
