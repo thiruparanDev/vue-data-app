@@ -8,12 +8,6 @@
           <img :src="selectedBeer?.image_url" alt="Image not found" height="200">
         </div>
         <div class="details" >
-          <!-- <div>
-            {{selectedBeer?.description}} <br>
-            {{selectedBeer?.first_brewed}} <br>
-            {{selectedBeer?.ingredients.yeast}} <br>
-            {{selectedBeer?.abv}}
-          </div> -->
         <div v-for="detail in detailsRef" :key="detail" class="detail">
            {{detail.name}} {{detail.value}}
         </div>
@@ -32,14 +26,6 @@ export default defineComponent({
     }
     ,
     setup(props){
-    // const details=[props.selectedBeer?.description,props.selectedBeer?.first_brewed,props.selectedBeer?.yeast,props.selectedBeer?.abv];
-//     const detailsRef= ref(
-//     [{name:'',value:props.selectedBeer?.description},
-//     {name:'First brewed: ',value:props.selectedBeer?.first_brewed},
-//     {name:'Yeast: ',value:props.selectedBeer?.ingredients?.yeast},
-//     {name:'Alcohol percentatage: ',value:props.selectedBeer?.abv}
-// ]);
-
       const detailsRef = computed(()=>{
       return([{name:'',value:props.selectedBeer?.description},
     {name:'First brewed: ',value:props.selectedBeer?.first_brewed},

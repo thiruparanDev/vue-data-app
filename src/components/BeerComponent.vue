@@ -4,8 +4,8 @@
   <SearchComponent :onSearch="onSearch" :filtersRef="filtersRef"/>
   <PopUp v-if="showPopupRef" :closePopUp="closePopUp" :selectedBeer="selectedBeerRef" />
   <BodyComponent :beersRef="beersRef" :showPopup="showPopup" />
-  <FooterComponent :pageNumberRef="pageNumberRef" :decreasePage="decreasePage" :increasePage="increasePage"
-    :clickCount="clickCount" />
+  <FooterComponent :beerLength="beersRef.length"
+    :clickCount="clickCount" :getData="getData" :pageNumber="pageNumber"/>
     <!-- <input v-model="filtersRef.searchText" placeholder="yeast name "> -->
 </template>
 
@@ -33,38 +33,16 @@ export default defineComponent({
   setup() {
     const filtersRef = ref({} as Filters);
     const beersRef: any = ref([]);
-    const pageNumberRef: Ref<number> = ref(1);
     const showPopupRef: Ref<boolean> = ref(false);
     const selectedBeerRef: Ref<string> = ref("");
     const clickCount: Ref<number> = ref(0);
+    const pageNumber: Ref<number> = ref(1);
     onMounted(async () => {
-      let savedItem = localStorage.getItem('savedItem');
-      if (savedItem !== null) {
-        const savedItem1 = JSON.parse(savedItem);
-        // store.dispatch('setFiltersRef',savedItem1.filtersRef);
-        filtersRef.value = savedItem1.filtersRef;
-        pageNumberRef.value = savedItem1.pageNumberRef;
-        clickCount.value = savedItem1.clickCount;
-      }
-      await getData();
+      filtersRef.value=store.state.filters;
+      clickCount.value=store.state.clickCount;
+      pageNumber.value=store.state.pageNumber;
+      await getData(pageNumber.value);
     });
-
-    // const print=(e: any)=>{
-    //   // console.log('gu')
-    //   console.log(searchText.value);
-    // };
-    const decreasePage = async () => {
-      if (pageNumberRef.value > 1) {
-        pageNumberRef.value--;
-        await getData();
-      }
-    };
-    const increasePage = async () => {
-      if (beersRef.value.length === 20) {
-        pageNumberRef.value++;
-        await getData();
-      }
-    };
     const showPopup = (beer: any) => {
       showPopupRef.value = true;
       selectedBeerRef.value = beer;
@@ -77,16 +55,18 @@ export default defineComponent({
 
     const onSearch = async (value: Filters) => {
       filtersRef.value = JSON.parse(JSON.stringify(value));
-      pageNumberRef.value = 1;
+      pageNumber.value=1;
+      localStorage.setItem('pageNumber', JSON.stringify(pageNumber.value));
       await getData();
     };
     const saveSettings = () => {
-      const saved = { filtersRef: filtersRef.value, pageNumberRef: pageNumberRef.value, clickCount: clickCount.value };
-      localStorage.setItem('savedItem', JSON.stringify(saved));
+      localStorage.setItem('filters', JSON.stringify(filtersRef.value));
+      localStorage.setItem('clickCount',JSON.stringify(clickCount.value));
     };
 
 
-    const getData = async () => {
+    const getData = async (page:number=pageNumber.value) => {
+      pageNumber.value=page;
       let text = "";
       let period = "";
       let yeast = "";
@@ -138,7 +118,7 @@ export default defineComponent({
         }
       }
       if (fetch) {
-        await apiCall(text, period, yeast, abvGt, abvLt, pageNumberRef.value).then(response => beersRef.value = response);
+        await apiCall(text, period, yeast, abvGt, abvLt, pageNumber.value).then(response => beersRef.value = response);
         saveSettings();
       }
 
@@ -148,16 +128,14 @@ export default defineComponent({
       beersRef,
       print,
       getData,
-      pageNumberRef,
-      decreasePage,
-      increasePage,
       showPopup,
       showPopupRef,
       onSearch,
       closePopUp,
       selectedBeerRef,
       clickCount,
-      filtersRef
+      filtersRef,
+      pageNumber
     };
   }
 });

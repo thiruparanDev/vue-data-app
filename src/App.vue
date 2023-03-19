@@ -5,7 +5,31 @@
   </div>
   <router-view />
 </template>
-
+<script lang="ts">
+import { defineComponent, onMounted } from "vue";
+import store from '@/store';
+export default defineComponent({
+  name: "Home",
+  components: {
+  },
+  setup() {
+    onMounted(() => {
+      const filters = localStorage.getItem('filters');
+      const pageNumber = localStorage.getItem('pageNumber');
+      const clickCount = localStorage.getItem('clickCount');
+      if (filters) {
+        store.dispatch('setFilters', JSON.parse(filters));
+      }
+      if (pageNumber) {
+        store.dispatch('setPageNumber', JSON.parse(pageNumber)); 
+      }
+      if (clickCount) {
+        store.dispatch('setClickCount', JSON.parse(clickCount));
+      }
+    });
+  }
+});
+</script>
 <style>
 #app {
   /* background-color: orange; */
