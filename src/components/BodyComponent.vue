@@ -7,7 +7,7 @@
   </template>
   
   <script lang="ts">
-  import { defineComponent,PropType,ref } from "vue";
+  import { defineComponent,PropType,ref, onMounted } from "vue";
   
   export default defineComponent({
     name: "Body",
@@ -18,7 +18,6 @@
       showPopup:Function
     },
     setup(props) {
-      // console.log(props.beersRef);
       return{
       };
     }

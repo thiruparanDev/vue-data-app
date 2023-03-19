@@ -20,17 +20,22 @@
 </template>
   
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted,computed, PropType, watch } from "vue";
 import Filters from "@/model/filters";
+import store from '@/store';
 export default defineComponent({
     name: "Search",
     props:{
-        onSearch:Function
+        onSearch:Function,
+        filtersRef:Object as PropType<any>
     },
     components: {
     },
     setup(props) {
         const filtersInfoRef = ref({} as Filters);
+        watch(()=>props.filtersRef,(value)=>filtersInfoRef.value=JSON.parse(JSON.stringify(value)));
+        // onMounted(() => {
+        // });
         const onSearchClick=()=>{
             if (props.onSearch){
                 props.onSearch(filtersInfoRef.value);

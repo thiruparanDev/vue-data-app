@@ -1,11 +1,12 @@
 <template>
   <h1>Welcome to Beer Selection</h1>
   <div class="popUpBackround" v-if="showPopupRef"></div>
-  <SearchComponent :onSearch="onSearch" />
+  <SearchComponent :onSearch="onSearch" :filtersRef="filtersRef"/>
   <PopUp v-if="showPopupRef" :closePopUp="closePopUp" :selectedBeer="selectedBeerRef" />
   <BodyComponent :beersRef="beersRef" :showPopup="showPopup" />
   <FooterComponent :pageNumberRef="pageNumberRef" :decreasePage="decreasePage" :increasePage="increasePage"
     :clickCount="clickCount" />
+    <!-- <input v-model="filtersRef.searchText" placeholder="yeast name "> -->
 </template>
 
 <script  lang="ts">
@@ -17,6 +18,7 @@ import Filters from "@/model/filters";
 import SearchComponent from "./SearchComponent.vue";
 import BodyComponent from "./BodyComponent.vue";
 import FooterComponent from "./FooterComponent.vue";
+import store from '@/store';
 export default defineComponent({
   name: "Beer",
   props: {
@@ -39,6 +41,7 @@ export default defineComponent({
       let savedItem = localStorage.getItem('savedItem');
       if (savedItem !== null) {
         const savedItem1 = JSON.parse(savedItem);
+        // store.dispatch('setFiltersRef',savedItem1.filtersRef);
         filtersRef.value = savedItem1.filtersRef;
         pageNumberRef.value = savedItem1.pageNumberRef;
         clickCount.value = savedItem1.clickCount;
@@ -153,7 +156,8 @@ export default defineComponent({
       onSearch,
       closePopUp,
       selectedBeerRef,
-      clickCount
+      clickCount,
+      filtersRef
     };
   }
 });
