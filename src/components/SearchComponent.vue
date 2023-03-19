@@ -31,12 +31,6 @@ export default defineComponent({
     },
     setup(props) {
         const filtersInfoRef = ref({} as Filters);
-        // const yearRef: Ref<number | undefined> = ref();
-        // const monthRef: Ref<number | undefined> = ref();
-        // const searchText: Ref<string> = ref("");
-        // const yeastRef: Ref<string> = ref("");
-        // const abvGtRef: Ref<number | undefined> = ref();
-        // const abvLtRef: Ref<number | undefined> = ref();
         const onSearchClick=()=>{
             if (props.onSearch){
                 props.onSearch(filtersInfoRef.value);
@@ -45,12 +39,6 @@ export default defineComponent({
         return {
             filtersInfoRef,
             onSearchClick
-            // yearRef,
-            // monthRef,
-            // searchText,
-            // yeastRef,
-            // abvGtRef,
-            // abvLtRef
         };
     }
 });
