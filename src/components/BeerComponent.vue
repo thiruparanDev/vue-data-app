@@ -10,7 +10,7 @@
 </template>
 
 <script  lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted,computed } from "vue";
 import type { Ref } from 'vue';
 import { apiCall } from '@/services/BeerService';
 import PopUp from "./PopUp.vue";
@@ -38,11 +38,14 @@ export default defineComponent({
     const clickCount: Ref<number> = ref(0);
     const pageNumber: Ref<number> = ref(1);
     onMounted(async () => {
-      filtersRef.value=store.state.filters;
-      clickCount.value=store.state.clickCount;
-      pageNumber.value=store.state.pageNumber;
+      filtersRef.value=filter.value;
+      clickCount.value=cliCount.value;
+      pageNumber.value=pagNumber.value;
       await getData(pageNumber.value);
     });
+    const filter = computed(()=>store.state.filters);
+    const cliCount=computed(()=>store.state.clickCount);
+    const pagNumber=computed(()=>store.state.pageNumber);
     const showPopup = (beer: any) => {
       showPopupRef.value = true;
       selectedBeerRef.value = beer;
