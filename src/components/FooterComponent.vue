@@ -1,7 +1,7 @@
 <template>
-  <button @click="decreasePage">Previous</button>
+  <a-button @click="decreasePage">Previous</a-button>
   {{ pageNumberRef }}
-  <button @click="increasePage">Next</button>
+  <a-button @click="increasePage">Next</a-button>
   <div>
     Click count: {{ clickCount }}
   </div>
