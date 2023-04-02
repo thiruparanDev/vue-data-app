@@ -1,9 +1,9 @@
 <template>
-      <div v-for="beer in beersRef" :key="beer.id" class="hello">
-    <li @click="showPopup(beer)">
-      <h3>{{ beer.name }}</h3>
-    </li>
-  </div>
+  <a-list size="large" bordered :data-source="beersRef"  >
+    <template #renderItem="{ item }">
+      <a-list-item @click="showPopup(item)" :key="item.id" >{{ item.name }}</a-list-item>
+    </template>
+  </a-list>
   </template>
   
   <script lang="ts">
@@ -25,31 +25,50 @@
   </script>
 
 <style lang="scss" scoped>
-.hello {
-  // margin:50px
-  background-color: rgb(226, 218, 218);
-  min-width: 10px;
-  margin-left: 25%;
-  margin-right: 25%;
-}
 li {
   // margin: 20px 0px;
   // background-color: lightblue;
   list-style-type: none;
 
   &:hover {
+    background-color: rgb(226, 241, 250);
     cursor: pointer;
+    
   }
-
-  .list {
+  .ant-list-item{
     display: flex;
-    flex-direction: row;
-
-    .details {
-      margin-top: 10px;
-      position: relative;
-    }
+    align-content: center;
+    text-align: center;
+    // &:hover{
+    //   background-color: blue;
+    // }
   }
 
 }
+.ant-list.ant-list-lg.ant-list-split.ant-list-bordered{
+  // background-color: blue;
+  margin: 2%;
+  margin-left: 25%;
+  margin-right: 25%;
+  background-color: rgb(250, 248, 248);
+}
+
+  @media only screen and (max-width: 900px) {
+    .ant-list.ant-list-lg.ant-list-split.ant-list-bordered{
+  // background-color: blue;
+  margin: 2%;
+  margin-left: 15%;
+  margin-right: 15%;
+  // background-color: rgb(250, 248, 248);
+}
+  }
+  @media only screen and (max-width: 576px) {
+    .ant-list.ant-list-lg.ant-list-split.ant-list-bordered{
+  // background-color: blue;
+  margin: 2%;
+  margin-left: 0%;
+  margin-right: 0%;
+  // background-color: rgb(250, 248, 248);
+}
+  }
 </style>

@@ -1,14 +1,13 @@
 <template>
   <h1>Welcome to Beer Selection</h1>
-  <div class="popUpBackround" v-if="showPopupRef"></div>
+  <!-- <div class="popUpBackround" v-if="showPopupRef"></div> -->
   <SearchComponent :onSearch="onSearch" :filtersRef="filtersRef"/>
-  <PopUp v-if="showPopupRef" :closePopUp="closePopUp" :selectedBeer="selectedBeerRef" />
+  <PopUp v-if="showPopupRef" :closePopUp="closePopUp" :selectedBeer="selectedBeerRef" :visible="showPopupRef" :key="selectedBeerRef.id"/>
   <BodyComponent :beersRef="beersRef" :showPopup="showPopup" />
   <FooterComponent :beerLength="beersRef.length"
     :clickCount="clickCount" :getData="getData" :pageNumber="pageNumber"/>
     <!-- <input v-model="filtersRef.searchText" placeholder="yeast name "> -->
 </template>
-
 <script  lang="ts">
 import { defineComponent, ref, onMounted,computed } from "vue";
 import type { Ref } from 'vue';
@@ -34,7 +33,7 @@ export default defineComponent({
     const filtersRef = ref({} as Filters);
     const beersRef: any = ref([]);
     const showPopupRef: Ref<boolean> = ref(false);
-    const selectedBeerRef: Ref<string> = ref("");
+    const selectedBeerRef = ref();
     const clickCount: Ref<number> = ref(0);
     const pageNumber: Ref<number> = ref(1);
     onMounted(async () => {
@@ -47,6 +46,7 @@ export default defineComponent({
     const cliCount=computed(()=>store.state.clickCount);
     const pagNumber=computed(()=>store.state.pageNumber);
     const showPopup = (beer: any) => {
+      // console.log(selectedBeerRef.value);
       showPopupRef.value = true;
       selectedBeerRef.value = beer;
       clickCount.value++;
@@ -165,5 +165,7 @@ h3 {
   min-width: 10px;
 
 }
-
+.ant-picker{
+  width: 100%;
+}
 </style>
