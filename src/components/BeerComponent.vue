@@ -165,7 +165,4 @@ h3 {
   min-width: 10px;
 
 }
-.ant-picker{
-  width: 100%;
-}
 </style>
