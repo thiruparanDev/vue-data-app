@@ -2,36 +2,17 @@
     <a-form :label-col="{ span: 10 }" :wrapper-col="{ span: 6 }">
         <a-form-item label="Beer name"><a-input v-model:value="filtersInfoRef.searchText" placeholder="Enter beer name" />
         </a-form-item>
-        <a-form-item  label="Enter brewed date before">
+        <a-form-item  label="Brewed date <">
             <a-date-picker @change="datePick" v-model:value="monthYear" picker="month" />
         </a-form-item>
         <a-form-item label="Yeast name"><a-input v-model:value="filtersInfoRef.yeastRef" placeholder="yeast name" />
         </a-form-item>
-        <a-form-item label="Alcohol Percentage greater than"><a-input v-model:value="filtersInfoRef.abvGtRef" placeholder="alcohol percentage greater than" />
+        <a-form-item label="Alcohol % >"><a-input v-model:value="filtersInfoRef.abvGtRef" placeholder="alcohol percentage greater than" />
         </a-form-item>
-        <a-form-item label="Alcohol Percentage lesser than"><a-input v-model:value="filtersInfoRef.abvLtRef" placeholder="alcohol percentage less than" />
+        <a-form-item label="Alcohol % <"><a-input v-model:value="filtersInfoRef.abvLtRef" placeholder="alcohol percentage less than" />
         </a-form-item>
         <a-button @click="onSearchClick">Search</a-button>
     </a-form>
-
-    <!-- <div>
-        <div><input v-model="filtersInfoRef.searchText" placeholder="Enter beer name">
-        </div>
-        <div class="date">
-            <span>Enter brewed date before: </span><input v-model="filtersInfoRef.monthRef" placeholder="mm">-<input
-                v-model="filtersInfoRef.yearRef" placeholder="yyyy">
-        </div>
-        <div>
-            <input v-model="filtersInfoRef.yeastRef" placeholder="yeast name ">
-        </div>
-        <div>
-            <input v-model="filtersInfoRef.abvGtRef" placeholder="alcohol percentage greater than ">
-        </div>
-        <div>
-            <input v-model="filtersInfoRef.abvLtRef" placeholder="alcohol percentage less than ">
-        </div>
-        <button @click="onSearchClick">Search</button>
-    </div> -->
 </template>
   
 <script lang="ts">
@@ -97,10 +78,13 @@ export default defineComponent({
         }
     
     }
-}
+}   
 // .date {
 //     input {
 //         width: 50px;
 //     }
 // }
+.ant-picker{
+  width: 100%;
+}
 </style>
