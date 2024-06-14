@@ -57,8 +57,7 @@ export default defineComponent({
         return {
             filtersInfoRef,
             onSearchClick,
-            datePick
-            ,
+            datePick,
             monthYear
         };
     }
